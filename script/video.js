@@ -1,6 +1,6 @@
-// 
 // global function 
-// 
+
+ // for showing time 
 function getTimeString(time){
     // get hour and rest sec
     const hour = parseInt(time / 3600);
@@ -9,20 +9,38 @@ function getTimeString(time){
     const minute = parseInt(remainSecond / 60);
     remainSecond = remainSecond % 60;
     return `${hour} hour ${minute} minute ${remainSecond} second ago`;
-}
-    // for removing class in btn
+};
+ // for removing class in btn
 const removeActiveClass = () =>{
 const buttons = document.getElementsByClassName('category-btn');
 for (let btn of buttons){
     btn.classList.remove('active')
 }
-}
+};
+ // for loading details of video
+const loadDetails = async(videoId) => {
+  const uri = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`;
+  const res = await fetch(uri);
+  const data = await res.json();
+  displayDetails(data.video);
+};
+ // for showing details of video
+const displayDetails = (video) => {
+   const detailContainer = document.getElementById('modalContent');
+   detailContainer.innerHTML = `
+   <img src = ${video.thumbnail}/>
+   <p>${video.description}</p>
+   `
+  // way 1
+  //document.getElementById('showModal').click();
 
-// 
+  // way 2 
+  document.getElementById('customModal').showModal();
+} 
+
 // fetch,load and show category on html
-// 
 
-// create load categories
+  // create load categories
 const loadCategories = () => {
     //  fetch the data
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
@@ -31,7 +49,7 @@ const loadCategories = () => {
     .catch((error) => console.log(error))
 }
 
-// create display categories
+  // create display categories
 const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('categories');
     // create button for each category
@@ -47,7 +65,7 @@ const displayCategories = (categories) => {
         categoryContainer.append(buttonContainer);
     });
 }
-//  load category videos
+  //  load category videos
 const loadCategoryVideos = (id) => {
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then((res) => res.json())
@@ -63,7 +81,7 @@ const loadCategoryVideos = (id) => {
     }
     
 
-// create load video
+  // create load video
 const loadVideos = () => {
     //  fetch the data
     fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
@@ -92,7 +110,7 @@ const displayVideos = (videos) => {
     // create card for each video
     videos.forEach(video => {
         const card = document.createElement('div');
-        card.classList = "h-[260px]"
+        card.classList = "h-[280px]"
         card.innerHTML = `
     <figure class = "h-[200px] relative">
     <img class = "w-full h-full object-cover rounded-t-2xl "
@@ -114,6 +132,7 @@ const displayVideos = (videos) => {
         video.authors[0].verified === true ? '<img class = "w-5 h-5 "  src = "https://img.icons8.com/?size=100&id=D9RtvkuOe31p&format=png&color=000000"/>' : ""
       }
      </div>
+     <button onclick = "loadDetails('${video.video_id}')" class = "btn btn-sm btn-error">details</button>
      </div>
     </div>
     `
