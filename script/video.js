@@ -1,4 +1,6 @@
+// 
 // global function 
+// 
 function getTimeString(time){
     // get hour and rest sec
     const hour = parseInt(time / 3600);
@@ -8,8 +10,17 @@ function getTimeString(time){
     remainSecond = remainSecond % 60;
     return `${hour} hour ${minute} minute ${remainSecond} second ago`;
 }
+    // for removing class in btn
+const removeActiveClass = () =>{
+const buttons = document.getElementsByClassName('category-btn');
+for (let btn of buttons){
+    btn.classList.remove('active')
+}
+}
 
+// 
 // fetch,load and show category on html
+// 
 
 // create load categories
 const loadCategories = () => {
@@ -17,13 +28,6 @@ const loadCategories = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     .then((res) => res.json())
     .then((data) => displayCategories(data.categories))
-    .catch((error) => console.log(error))
-}
-//  load category videos
-const loadCategoryVideos = (id) => {
-fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
-    .then((res) => res.json())
-    .then((data) => displayVideos(data.category))
     .catch((error) => console.log(error))
 }
 
@@ -35,7 +39,7 @@ const displayCategories = (categories) => {
         // create a button for each item
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `
-        <button onclick = "loadCategoryVideos(${item.category_id})"  class= "btn">
+        <button id = "btn-${item.category_id}" onclick = "loadCategoryVideos(${item.category_id})"  class= "btn category-btn">
         ${item.category}
         </button>
         `
@@ -43,8 +47,21 @@ const displayCategories = (categories) => {
         categoryContainer.append(buttonContainer);
     });
 }
-
-loadCategories();
+//  load category videos
+const loadCategoryVideos = (id) => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+            // removing existing btn class
+            removeActiveClass();
+            // adding btn class
+            const activeBtn = document.getElementById(`btn-${id}`);
+            activeBtn.classList.add('active')
+            displayVideos(data.category)
+        })
+        .catch((error) => console.log(error))
+    }
+    
 
 // create load video
 const loadVideos = () => {
@@ -105,4 +122,5 @@ const displayVideos = (videos) => {
     });
 }
 
+loadCategories();
 loadVideos();
