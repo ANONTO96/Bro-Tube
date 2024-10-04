@@ -98,8 +98,8 @@ const displayVideos = (videos) => {
         videoContainer.classList.remove("grid");
         videoContainer.innerHTML = `
         <div class = "min-h-[500px] flex flex-col justify-center items-center gap-5">
-        <img src = "assests/icon.png"/>;
-        <h2 class = "font-bold text-2xl text-center">No Content Here In This Category</h2>
+        <img src = "./assets/icon.png"/>;
+        <h2 class = "font-bold text-2xl text-center">No Content Here In This Category !</h2>
         </div>
         `;
         return;
